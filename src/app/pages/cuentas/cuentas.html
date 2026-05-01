@@ -1,0 +1,107 @@
+<div class="page-header">
+  <h2>Cuentas</h2>
+  <button class="btn btn-primary" (click)="openModal()">Nuevo</button>
+</div>
+
+<div class="search-container">
+  <input type="text" placeholder="Buscar por número..." [formControl]="searchControl">
+</div>
+
+<div class="table-container">
+  <table>
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Número</th>
+        <th>Tipo</th>
+        <th>Saldo Inicial</th>
+        <th>Estado</th>
+        <th>Cliente</th>
+        <th>Acciones</th>
+      </tr>
+    </thead>
+    <tbody>
+      @for (cuenta of filteredCuentas(); track cuenta.id) {
+        <tr>
+          <td>{{ cuenta.id }}</td>
+          <td>{{ cuenta.numeroCuenta }}</td>
+          <td>{{ cuenta.tipoCuenta }}</td>
+          <td>{{ cuenta.saldoInicial | currency }}</td>
+          <td>
+            <span [class]="cuenta.estado ? 'status-active' : 'status-inactive'">
+              {{ cuenta.estado ? 'Activa' : 'Inactiva' }}
+            </span>
+          </td>
+          <td>{{ getClienteNombre(cuenta.clienteId) }}</td>
+          <td>
+            <button class="btn btn-secondary" (click)="edit(cuenta)">Editar</button>
+            <button class="btn btn-secondary btn-danger" (click)="delete(cuenta.id)">Eliminar</button>
+          </td>
+        </tr>
+      }
+    </tbody>
+  </table>
+</div>
+
+@if (isModalOpen()) {
+  <div class="modal-overlay">
+    <div class="modal-content">
+      <h3>{{ editingId() ? 'Editar Cuenta' : 'Nueva Cuenta' }}</h3>
+
+      @if (errorMsg()) {
+        <div class="global-error">
+          {{ errorMsg() }}
+        </div>
+      }
+      
+      <form [formGroup]="form" (ngSubmit)="save()">
+        <div class="form-group">
+          <label>Número</label>
+          <input type="text" formControlName="numeroCuenta">
+          @if (form.get('numeroCuenta')?.invalid && form.get('numeroCuenta')?.touched) {
+            <span class="error-msg">Número es requerido</span>
+          }
+        </div>
+        <div class="form-group">
+          <label>Tipo</label>
+          <select formControlName="tipoCuenta">
+            <option value="AHORROS">AHORROS</option>
+            <option value="CORRIENTE">CORRIENTE</option>
+          </select>
+          @if (form.get('tipoCuenta')?.invalid && form.get('tipoCuenta')?.touched) {
+            <span class="error-msg">Tipo es requerido</span>
+          }
+        </div>
+        <div class="form-group">
+          <label>Saldo Inicial</label>
+          <input type="number" formControlName="saldoInicial" [readOnly]="editingId() !== null">
+          @if (form.get('saldoInicial')?.invalid && form.get('saldoInicial')?.touched) {
+            <span class="error-msg">Saldo es requerido</span>
+          }
+        </div>
+        <div class="form-group checkbox-group">
+          <label>
+            <input type="checkbox" formControlName="estado">
+            Cuenta Activa
+          </label>
+        </div>
+        <div class="form-group">
+          <label>Cliente</label>
+          <select formControlName="clienteId">
+            <option [ngValue]=null>Seleccione...</option>
+            @for (cliente of clientes(); track cliente.clienteId) {
+              <option [ngValue]="cliente.clienteId">{{ cliente.nombre }}</option>
+            }
+          </select>
+          @if (form.get('clienteId')?.invalid && form.get('clienteId')?.touched) {
+            <span class="error-msg">Cliente es requerido</span>
+          }
+        </div>
+        <div class="modal-actions">
+          <button type="button" class="btn btn-secondary" (click)="closeModal()">Cancelar</button>
+          <button type="submit" class="btn btn-primary">Guardar</button>
+        </div>
+      </form>
+    </div>
+  </div>
+}

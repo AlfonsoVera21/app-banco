@@ -1,0 +1,111 @@
+/* General variables based on the provided image */
+:root {
+  --primary-color: #2b395b; /* Text color for "BANCO" */
+  --accent-color: #f2c94c; /* Yellow button "Nuevo" */
+  --bg-color: #f3f4f6;
+  --text-main: #333;
+  --text-light: #666;
+  --border-color: #e5e7eb;
+  --white: #ffffff;
+}
+
+body {
+  margin: 0;
+  font-family: 'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background-color: var(--bg-color);
+  color: var(--text-main);
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+h1, h2, h3, h4, p {
+  margin: 0;
+}
+
+/* Layout */
+.app-container {
+  display: flex;
+  height: calc(100vh - 60px); /* Assuming header is 60px */
+}
+
+/* Base button styles */
+.btn {
+  padding: 8px 16px;
+  border: none;
+  cursor: pointer;
+  border-radius: 4px;
+  font-weight: 600;
+  transition: opacity 0.2s;
+}
+
+.btn:hover {
+  opacity: 0.8;
+}
+
+.btn-primary {
+  background-color: var(--accent-color);
+  color: #000;
+}
+
+.btn-secondary {
+  background-color: #ddd;
+  color: #333;
+}
+
+/* Table styles */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 1rem;
+}
+
+th, td {
+  border-bottom: 1px solid var(--border-color);
+  padding: 12px;
+  text-align: left;
+}
+
+th {
+  color: var(--text-light);
+  font-weight: 500;
+}
+
+/* Form inputs */
+input, select {
+  padding: 8px 12px;
+  border: 1px solid var(--border-color);
+  border-radius: 4px;
+  outline: none;
+}
+
+input:focus, select:focus {
+  border-color: var(--primary-color);
+}
+
+/* Modals / Forms */
+.form-group {
+  margin-bottom: 1rem;
+  display: flex;
+  flex-direction: column;
+}
+
+.form-group label {
+  margin-bottom: 0.5rem;
+  font-weight: 500;
+}
+
+/* Error messages */
+.error-msg {
+  color: #dc2626;
+  font-size: 0.8rem;
+  margin-top: 4px;
+}
+
+.text-danger {
+  color: #dc2626 !important;
+}
+
+.text-success {
+  color: #16a34a !important;
+}

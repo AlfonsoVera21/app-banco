@@ -1,0 +1,35 @@
+.sidebar {
+  width: 250px;
+  background-color: var(--bg-color);
+  border-right: 1px solid var(--border-color);
+  padding: 1rem 0;
+}
+
+.nav-menu {
+  display: flex;
+  flex-direction: column;
+}
+
+.nav-item {
+  padding: 12px 2rem;
+  color: var(--text-main);
+  text-decoration: none;
+  font-weight: 500;
+  transition: background-color 0.2s;
+  font-size: 0.95rem;
+  border-bottom: 1px solid transparent; /* or a very light dotted line depending on the design */
+}
+
+/* Simulate the line dividers from the image */
+.nav-item:not(:last-child) {
+  border-bottom: 1px dashed var(--border-color);
+}
+
+.nav-item:hover {
+  background-color: var(--white);
+}
+
+.nav-item.active {
+  background-color: var(--white);
+  border-left: 3px solid var(--primary-color);
+}

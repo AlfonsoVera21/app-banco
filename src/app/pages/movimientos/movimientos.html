@@ -1,0 +1,86 @@
+<div class="page-header">
+  <h2>Movimientos</h2>
+  <button class="btn btn-primary" (click)="openModal()">Nuevo</button>
+</div>
+
+<div class="search-container">
+  <input type="text" placeholder="Buscar por cuenta..." [formControl]="searchControl">
+</div>
+
+<div class="table-container">
+  <table>
+    <thead>
+      <tr>
+        <th>Fecha</th>
+        <th>Cuenta</th>
+        <th>Tipo</th>
+        <th>Valor</th>
+        <th>Saldo Disponible</th>
+      </tr>
+    </thead>
+    <tbody>
+      @for (mov of filteredMovimientos(); track mov.id) {
+        <tr>
+          <td>{{ mov.fecha | date:'dd/MM/yyyy HH:mm' }}</td>
+          <td>{{ getCuentaNumero(mov.cuentaId) }}</td>
+          <td>{{ mov.tipoMovimiento }}</td>
+          <td [ngClass]="{'text-success': mov.tipoMovimiento === 'DEPOSITO', 'text-danger': mov.tipoMovimiento === 'RETIRO'}">
+            {{ mov.tipoMovimiento === 'DEPOSITO' ? '+' : '-' }}{{ (mov.valor < 0 ? -mov.valor : mov.valor) | currency }}
+          </td>
+          <td>{{ mov.saldo | currency }}</td>
+        </tr>
+      }
+    </tbody>
+  </table>
+</div>
+
+@if (isModalOpen()) {
+  <div class="modal-overlay">
+    <div class="modal-content">
+      <h3>Registrar Movimiento</h3>
+
+      @if (errorMsg()) {
+        <div class="global-error">
+          {{ errorMsg() }}
+        </div>
+      }
+      
+      <form [formGroup]="form" (ngSubmit)="save()">
+        <div class="form-group">
+          <label>Cuenta</label>
+          <select class="form-control" formControlName="cuentaId">
+            <option value="">Seleccione...</option>
+            @for (cuenta of cuentas(); track cuenta.id) {
+              <option [value]="cuenta.id">{{ cuenta.numeroCuenta }} (Saldo: {{ getSaldoDisponible(cuenta.id!) | currency }})</option>
+            }
+          </select>
+          @if (form.get('cuentaId')?.invalid && form.get('cuentaId')?.touched) {
+            <span class="error-msg">Cuenta es requerida</span>
+          }
+        </div>
+        <div class="form-group">
+          <label>Tipo de Movimiento</label>
+          <select formControlName="tipoMovimiento">
+            <option value="DEPOSITO">Depósito</option>
+            <option value="RETIRO">Retiro</option>
+          </select>
+          @if (form.get('tipoMovimiento')?.invalid && form.get('tipoMovimiento')?.touched) {
+            <span class="error-msg">Tipo es requerido</span>
+          }
+        </div>
+        <div class="form-group">
+          <label>Valor</label>
+          <input type="number" formControlName="valor">
+          @if (form.get('valor')?.invalid && form.get('valor')?.touched) {
+            <span class="error-msg">Valor es requerido y mayor a 0</span>
+          }
+        </div>
+        
+        <div class="modal-actions">
+          <button type="button" class="btn btn-secondary" (click)="closeModal()">Cancelar</button>
+          <button type="submit" class="btn btn-primary">Guardar</button>
+        </div>
+      </form>
+    </div>
+  </div>
+}
